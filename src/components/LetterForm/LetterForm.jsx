@@ -7,31 +7,31 @@ import Button from "components/Button/Button";
 import userThumb from "../../assets/img/user.png";
 import { useDispatch, useSelector } from "react-redux";
 import { addLetter } from "../../redux/modules/letter";
+import { useNavigate } from "react-router-dom";
 
 export default function LetterForm() {
   const memberData = useSelector((state) => state.member.memberData);
   const dispatch = useDispatch();
+  const name = localStorage.getItem("nickname");
+  const navigate = useNavigate();
 
   const [selected, setSelected] = useState("");
-  const nameRef = useRef(null);
   const contentsRef = useRef(null);
   const selectRef = useRef(null);
 
   //폼 이벤트
   const formHandler = (e) => {
     e.preventDefault();
-    const name = e.target.name.value;
     const contents = e.target.contents.value;
 
     //유효성 검사
+    if (!name) {
+      alert("로그인 후 팬레터 등록이 가능합니다. 로그인 화면으로 이동합니다.");
+      navigate("/login");
+    }
     if (!selected.trim()) {
       alert("아티스트를 선택해주세요");
       selectRef.current.focus();
-      return;
-    }
-    if (!name.trim()) {
-      alert("닉네임을 입력해주세요");
-      nameRef.current.focus();
       return;
     }
     if (!contents.trim()) {
@@ -89,9 +89,8 @@ export default function LetterForm() {
 
   return (
     <FormContainer onSubmit={formHandler}>
+      닉네임 : {name ? name : "로그인 후 이용 가능합니다."}
       <LetterSelect id="artistSelect" onChangeHandler={(e) => onChangeHandler(e)} memberData={memberData} selectRef={selectRef}></LetterSelect>
-      <LetterLabel htmlFor="name">닉네임</LetterLabel>
-      <LetterInput type="text" id="name" name="name" ref={nameRef} maxLength="10" placeholder="최대 10자까지 입력할 수 있습니다." />
       <LetterLabel htmlFor="contents">내용</LetterLabel>
       <LetterTextarea name="contents" id="contents" cols="30" rows="10" maxLength="80" ref={contentsRef} placeholder="최대 80자까지 입력할 수 있습니다."></LetterTextarea>
       <ButtonBox>
