@@ -22,13 +22,35 @@ export default function LoginForm() {
     setIsJoin((state) => !state);
   };
 
+  //쿠키 설정
+  const setCookie = (token, minutes) => {
+    const date = new Date();
+    date.setTime(date.getTime() + minutes * 60 * 1000);
+    const expires = "; expires=" + date.toUTCString();
+
+    document.cookie = "accessToken=" + (token || "") + expires + "; path=/";
+  };
+
   //회원가입
-  const register = async (newObj) => {
+  const handleRegister = async (newObj) => {
     try {
       await api.post("/register", newObj);
       alert("회원가입이 완료되었습니다!");
       //TODO: 회원가입 화면으로 바꿀 때 input에 값을 유지하는게 좋을지 확인 필요.(현재는 유지)
       setIsJoin(false);
+    } catch (error) {
+      alert("에러가 발생했습니다.");
+      console.error(error);
+    }
+  };
+
+  //로그인
+  const handleLogin = async (memberObj) => {
+    try {
+      const response = await api.post("/login", memberObj, { widthCredentials: true });
+      const accessToken = response.data.accessToken;
+      setCookie(accessToken, 10);
+      console.log(response.data);
     } catch (error) {
       alert("에러가 발생했습니다.");
       console.error(error);
@@ -69,13 +91,23 @@ export default function LoginForm() {
       return nicknameRef.current.focus();
     }
 
-    const newObj = {
-      id,
-      password,
-      nickname
-    };
+    //isJoin state 에 따른 회원가입/로그인 로직 분기
+    if (isJoin) {
+      const newObj = {
+        id,
+        password,
+        nickname
+      };
 
-    register(newObj);
+      handleRegister(newObj);
+    } else {
+      const memberObj = {
+        id,
+        password
+      };
+
+      handleLogin(memberObj);
+    }
   };
 
   return (
@@ -86,12 +118,12 @@ export default function LoginForm() {
         <InputStyle type="text" id="id" name="id" ref={idRef} minLength="4" maxLength="10" placeholder="아이디 (4~10글자)" />
         {/* <ColorError ref={idErrorRef}></ColorError> */}
         <InputName htmlFor="password">비밀번호</InputName>
-        <InputStyle type="password" id="password" name="password" ref={passwordRef} minLength="4" maxLength="15" placeholder="비밀번호 (4~15글자)" />
+        <InputStyle type="password" id="password" name="password" ref={passwordRef} minLength="4" maxLength="15" autoComplete="off" placeholder="비밀번호 (4~15글자)" />
         {/* <ColorError ref={passwordErrorRef}></ColorError> */}
         {isJoin ? (
           <>
             <InputName htmlFor="passwordConfirm">비밀번호 확인</InputName>
-            <InputStyle type="password" id="passwordConfirm" name="passwordConfirm" ref={passwordConfirmRef} minLength="4" maxLength="15" placeholder="비밀번호 (4~15글자)" />
+            <InputStyle type="password" id="passwordConfirm" name="passwordConfirm" ref={passwordConfirmRef} minLength="4" maxLength="15" autoComplete="off" placeholder="비밀번호 (4~15글자)" />
             {/* <ColorError ref={passwordConfirmErrorRef}></ColorError> */}
             <InputName htmlFor="nickname">닉네임</InputName>
             <InputStyle type="text" id="nickname" name="nickname" ref={nicknameRef} minLength="1" maxLength="10" placeholder="닉네임 (1~10글자)" />
