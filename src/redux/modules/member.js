@@ -1,15 +1,5 @@
+import { createSlice } from "@reduxjs/toolkit";
 const { memberData } = require("shared/memberData");
-
-//action value
-const SET_MEMBER_ID = "SET_MEMBER_ID";
-
-//action creator
-export const setMemberId = (payload) => {
-  return {
-    type: SET_MEMBER_ID,
-    payload
-  };
-};
 
 //초깃값
 const initialState = {
@@ -17,16 +7,18 @@ const initialState = {
   memberId: 1
 };
 
-const member = (state = initialState, action) => {
-  switch (action.type) {
-    case SET_MEMBER_ID:
+const memberSlice = createSlice({
+  name: "member",
+  initialState,
+  reducers: {
+    setMemberId: (state, action) => {
       return {
         ...state,
         memberId: action.payload
       };
-    default:
-      return state;
+    }
   }
-};
+});
 
-export default member;
+export const { setMemberId } = memberSlice.actions;
+export default memberSlice.reducer;

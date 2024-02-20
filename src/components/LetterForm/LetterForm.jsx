@@ -6,7 +6,7 @@ import { ButtonBox } from "components/Button/ButtonStyles";
 import Button from "components/Button/Button";
 import userThumb from "../../assets/img/user.png";
 import { useDispatch, useSelector } from "react-redux";
-import { AddLetter } from "../../redux/modules/letter";
+import { addLetter } from "../../redux/modules/letter";
 
 export default function LetterForm() {
   const memberData = useSelector((state) => state.member.memberData);
@@ -84,7 +84,7 @@ export default function LetterForm() {
       id
     };
 
-    dispatch(AddLetter({ newDataObj, selected }));
+    dispatch(addLetter({ newDataObj, selected }));
   };
 
   return (
