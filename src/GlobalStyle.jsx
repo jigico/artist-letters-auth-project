@@ -139,7 +139,7 @@ const GlobalStyle = createGlobalStyle`
   input[type="button"] {
     cursor: pointer;
   }
-
+  *{box-sizing:border-box}
 `;
 
 export default GlobalStyle;
