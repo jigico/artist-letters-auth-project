@@ -44,7 +44,7 @@ export default function LoginForm() {
       //TODO: 회원가입 화면으로 바꿀 때 input에 값을 유지하는게 좋을지 확인 필요.(현재는 유지)
       setIsJoin(false);
     } catch (error) {
-      alert("에러가 발생했습니다.");
+      // alert("에러가 발생했습니다.");
       console.error(error);
     }
   };
@@ -63,7 +63,7 @@ export default function LoginForm() {
       dispatch(setIsLogin());
       navigate("/"); //TODO 여기서 하는거 맞는지 확인 필요
     } catch (error) {
-      alert("에러가 발생했습니다.");
+      // alert("에러가 발생했습니다.");
       console.error(error);
     }
   };
