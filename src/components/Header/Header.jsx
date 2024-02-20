@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { HeaderContainer } from "./HeaderStyles";
+import { BtnLogout, HeaderContainer } from "./HeaderStyles";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsLogin } from "../../redux/modules/authSlice";
 
@@ -30,7 +30,7 @@ export default function Header() {
         ) : (
           <>
             <Link to="/mypage">마이페이지</Link>
-            <button onClick={handleLogout}>로그아웃</button>
+            <BtnLogout onClick={handleLogout}>로그아웃</BtnLogout>
           </>
         )}
       </div>
