@@ -1,11 +1,20 @@
 import styled from "styled-components";
 
+export const ColorError = styled.span`
+  color: red;
+  font-size: 0.8rem;
+`;
 export const LoginWrap = styled.div`
   margin: 5rem auto;
   padding: 2rem;
   max-width: 350px;
   box-shadow: 0px 0 4px 2px #eee;
   border-radius: 5px;
+
+  & ${ColorError} {
+    display: inline-block;
+    padding-top: 5px;
+  }
 `;
 export const PageTitle = styled.h1`
   margin-bottom: 1rem;
@@ -13,11 +22,11 @@ export const PageTitle = styled.h1`
   text-align: center;
 `;
 export const InputName = styled.label`
+  margin-top: 0.5rem;
   padding: 0.3rem 0;
   display: block;
 `;
 export const InputStyle = styled.input`
-  margin-bottom: 1rem;
   padding: 0 0.5rem;
   display: block;
   width: 100%;
@@ -29,6 +38,9 @@ export const InputStyle = styled.input`
     outline: none;
     border-color: #0063f8;
   }
+`;
+export const BtnArea = styled.div`
+  margin-top: 1rem;
 `;
 export const BtnBlackBg = styled.button`
   width: 100%;
