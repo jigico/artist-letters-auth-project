@@ -1,4 +1,6 @@
+import AuthLayout from "components/Layout/AuthLayout";
 import Main from "components/Layout/Main";
+import { NonAuthLayout } from "components/Layout/NonAuthLayout";
 import Detail from "pages/Detail";
 import Home from "pages/Home";
 import Login from "pages/Login";
@@ -10,12 +12,16 @@ export default function Router() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Main />}>
-          <Route path="" element={<Home />} />
+        <Route path="/" element={<Home />} />
+        <Route element={<Main />}>
           <Route path="/detail/:id" element={<Detail />} />
+        </Route>
+        <Route element={<AuthLayout />}>
           <Route path="/mypage" element={<MyPage />} />
         </Route>
-        <Route path="/login" element={<Login />} />
+        <Route element={<NonAuthLayout />}>
+          <Route path="/login" element={<Login />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

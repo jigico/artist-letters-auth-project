@@ -1,11 +1,10 @@
 import Header from "components/Header/Header";
-import TopBanner from "components/TopBanner/TopBanner";
 import React from "react";
-import { Outlet } from "react-router-dom";
 import { Layout1280 } from "./LayoutStyles";
+import { Outlet } from "react-router-dom";
 import Footer from "components/Footer/Footer";
 
-export default function Main() {
+const AuthLayout = () => {
   return (
     <>
       <Header />
@@ -15,4 +14,6 @@ export default function Main() {
       <Footer />
     </>
   );
-}
+};
+
+export default AuthLayout;
