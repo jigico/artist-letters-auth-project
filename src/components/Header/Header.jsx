@@ -25,7 +25,6 @@ export default function Header() {
 
   useEffect(() => {
     if (!ACCESS_TOKEN) {
-      console.log("토큰 없을 시 실행");
       if (isLogin) {
         dispatch(setIsLogin());
       }
