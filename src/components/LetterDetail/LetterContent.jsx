@@ -4,11 +4,10 @@ import { LetterTextarea } from "components/LetterForm/LetterFormStyles";
 import { useNavigate } from "react-router-dom";
 import Button from "components/Button/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { updateLetter, deleteLetter, __updateLetter } from "../../redux/modules/letter";
+import { __updateLetter, __deleteLetter } from "../../redux/modules/letter";
 import { getFormattedDate } from "util/date";
 
 export default function LetterContent({ data }) {
-  const { data: LetterData } = useSelector((state) => state.letter);
   const memberData = useSelector((state) => state.member.memberData);
   const dispatch = useDispatch();
 
@@ -53,18 +52,7 @@ export default function LetterContent({ data }) {
       return;
     }
 
-    //수정할 데이터 id 조회
-    const memberId = findMember();
-    let updateIdx = null;
-
-    // LetterData[memberId].forEach((el, idx) => {
-    //   if (el["id"] === data.id) {
-    //     updateIdx = idx;
-    //   }
-    // });
-
     dispatch(__updateLetter({ id: data.id, content }));
-    // dispatch(updateLetter({ updateMemberId: memberId, updateIdx, content }));
     setContent(content);
     alert("수정이 완료되었습니다.");
 
@@ -78,17 +66,7 @@ export default function LetterContent({ data }) {
     const answer = window.confirm("정말 삭제하겠습니까?");
     if (!answer) return alert("삭제를 취소하였습니다.");
 
-    // 삭제할 데이터 id 조회
-    const memberId = findMember();
-    let deleteIdx = null;
-    //삭제할 데이터의 index 구하기
-    LetterData[memberId].forEach((el, idx) => {
-      if (el["id"] === data.id) {
-        deleteIdx = idx;
-      }
-    });
-
-    dispatch(deleteLetter({ memberId, deleteIdx }));
+    dispatch(__deleteLetter(data.id));
 
     alert("삭제가 완료되었습니다. 메인 화면으로 이동합니다.");
     navigate("/");

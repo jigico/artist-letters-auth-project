@@ -44,6 +44,16 @@ export const __updateLetter = createAsyncThunk("updateLetter", async (payload, t
   }
 });
 
+export const __deleteLetter = createAsyncThunk("deleteLetter", async (payload, thunkAPI) => {
+  try {
+    const response = await axios.delete(`${process.env.REACT_APP_JSON_SERVER_URL}/letters/${payload}`);
+    return thunkAPI.fulfillWithValue(response.data);
+  } catch (error) {
+    alert(error.response.data.message);
+    return thunkAPI.rejectWithValue(error);
+  }
+});
+
 const letterSlice = createSlice({
   name: "letter",
   initialState,
@@ -86,8 +96,6 @@ const letterSlice = createSlice({
       state.isError = false;
     });
     builder.addCase(__addLetter.fulfilled, (state, action) => {
-      console.log("state", state);
-      console.log("action.payload", action.payload);
       state.isLoading = false;
       state.isError = false;
       state.data = [...state.data, action.payload];
@@ -124,7 +132,7 @@ const letterSlice = createSlice({
     builder.addCase(__updateLetter.fulfilled, (state, action) => {
       const { id, content } = action.payload;
       const newData = state.data.find((item) => {
-        return item.id === action.payload.id;
+        return item.id === id;
       });
       newData.content = content;
       state.isLoading = false;
@@ -139,6 +147,21 @@ const letterSlice = createSlice({
     });
 
     //삭제
+    builder.addCase(__deleteLetter.pending, (state, action) => {
+      state.isLoading = true;
+      state.isError = false;
+    });
+    builder.addCase(__deleteLetter.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isError = false;
+      state.data = [...state.data];
+      localStorage.setItem(LOCAL_KEY, JSON.stringify(state.data));
+    });
+    builder.addCase(__deleteLetter.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.error = action.payload;
+    });
   }
 });
 
