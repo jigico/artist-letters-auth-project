@@ -4,13 +4,15 @@ import { LetterTextarea } from "components/LetterForm/LetterFormStyles";
 import { useNavigate } from "react-router-dom";
 import Button from "components/Button/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { updateLetter, deleteLetter } from "../../redux/modules/letter";
+import { updateLetter, deleteLetter, __updateLetter } from "../../redux/modules/letter";
 import { getFormattedDate } from "util/date";
 
 export default function LetterContent({ data }) {
   const { data: LetterData } = useSelector((state) => state.letter);
   const memberData = useSelector((state) => state.member.memberData);
   const dispatch = useDispatch();
+
+  const userId = localStorage.getItem("userId");
 
   //전역으로 관리하지 않아도 되는 데이터 모음
   const [content, setContent] = useState(data.content);
@@ -55,13 +57,14 @@ export default function LetterContent({ data }) {
     const memberId = findMember();
     let updateIdx = null;
 
-    LetterData[memberId].forEach((el, idx) => {
-      if (el["id"] === data.id) {
-        updateIdx = idx;
-      }
-    });
+    // LetterData[memberId].forEach((el, idx) => {
+    //   if (el["id"] === data.id) {
+    //     updateIdx = idx;
+    //   }
+    // });
 
-    dispatch(updateLetter({ updateMemberId: memberId, updateIdx, content }));
+    dispatch(__updateLetter({ id: data.id, content }));
+    // dispatch(updateLetter({ updateMemberId: memberId, updateIdx, content }));
     setContent(content);
     alert("수정이 완료되었습니다.");
 
@@ -110,24 +113,28 @@ export default function LetterContent({ data }) {
       <ArtistInfo>To {data.writedTo}</ArtistInfo>
       <LetterTextarea cols="30" rows="5" value={content} onChange={changeHandler} maxLength="80" ref={contentRef} readOnly placeholder="최대 80자까지 입력할 수 있습니다."></LetterTextarea>
       <ButtonBox>
-        {isEditing === true ? (
-          <>
-            <Button clickHandler={editLetter} variant="success">
-              완료
-            </Button>
-            <Button clickHandler={cancelEditTextarea} variant="normal">
-              취소
-            </Button>
-          </>
+        {userId && userId === data.userId ? (
+          isEditing === true ? (
+            <>
+              <Button clickHandler={editLetter} variant="success">
+                완료
+              </Button>
+              <Button clickHandler={cancelEditTextarea} variant="normal">
+                취소
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button clickHandler={editTextarea} variant="success">
+                수정
+              </Button>
+              <Button clickHandler={deleteLetterHandler} variant="danger">
+                삭제
+              </Button>
+            </>
+          )
         ) : (
-          <>
-            <Button clickHandler={editTextarea} variant="success">
-              수정
-            </Button>
-            <Button clickHandler={deleteLetterHandler} variant="danger">
-              삭제
-            </Button>
-          </>
+          <></>
         )}
       </ButtonBox>
     </LetterContentItem>
