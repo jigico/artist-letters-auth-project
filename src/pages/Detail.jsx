@@ -10,7 +10,7 @@ export default function Detail() {
   const params = useParams();
   const dispatch = useDispatch();
   let findData = {};
-  console.log(data);
+
   //id랑 일치하는 데이터 찾기
   findData = data.find((item) => {
     return item.id === params.id;

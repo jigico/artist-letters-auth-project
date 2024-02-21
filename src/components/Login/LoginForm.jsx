@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { InputName, InputStyle, LoginWrap, PageTitle, BtnBlackBg, BtnBlackText, ColorError, BtnArea } from "./LoginStyles";
+import { InputName, InputStyle, LoginWrap, PageTitle, BtnBlackBg, BtnBlackText, BtnArea } from "./LoginStyles";
 import api from "../../axios/api";
 import { useDispatch } from "react-redux";
 import { setIsLogin, setUser } from "../../redux/modules/authSlice";

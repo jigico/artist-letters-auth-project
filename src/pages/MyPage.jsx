@@ -20,7 +20,6 @@ export default function MyPage() {
 
   //프로필 이미지 업로드
   const updateAvatar = async (avatar) => {
-    console.log("avatar", avatar);
     try {
       const response = await axios.patch(
         `${process.env.REACT_APP_SERVER_URL}/profile`,
