@@ -5,8 +5,8 @@ import { useSelector } from "react-redux";
 export default function Member({ data, onClickHandler, isActive }) {
   const letterData = useSelector((state) => state.letter.data);
   let dataLength = 0;
-  if (letterData && letterData[data.id]) {
-    dataLength = letterData[data.id].length;
+  if (letterData) {
+    dataLength = letterData.filter((item) => item.artistId == data.id).length;
   }
 
   return (
