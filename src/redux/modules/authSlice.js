@@ -5,7 +5,8 @@ const initialState = {
   user: {
     userId: "",
     avatar: "",
-    nickname: ""
+    nickname: "",
+    accessToken: ""
   }
 };
 
@@ -17,11 +18,18 @@ const authSlice = createSlice({
       state.isLogin = !state.isLogin;
     },
     setUser: (state, action) => {
-      const { userId, avatar, nickname } = action.payload;
+      const { userId, avatar, nickname, accessToken } = action.payload;
+      //localStorage 저장
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("userId", userId);
+      localStorage.setItem("avatar", avatar);
+      localStorage.setItem("nickname", nickname);
+      //state 저장
       state.user = {
         userId,
         avatar,
-        nickname
+        nickname,
+        accessToken
       };
     }
   }

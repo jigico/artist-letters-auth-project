@@ -52,14 +52,10 @@ export default function LoginForm() {
   //로그인
   const handleLogin = async (memberObj) => {
     try {
-      const response = await api.post("/login", memberObj, { widthCredentials: true });
+      const response = await api.post("/login?expiresIn=1m", memberObj, { widthCredentials: true });
       const accessToken = response.data.accessToken;
-      setCookie(accessToken, 10);
+      setCookie(accessToken, 1);
       dispatch(setUser(response.data));
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("userId", response.data.userId);
-      localStorage.setItem("avatar", response.data.avatar);
-      localStorage.setItem("nickname", response.data.nickname);
       dispatch(setIsLogin());
       navigate("/"); //TODO 여기서 하는거 맞는지 확인 필요
     } catch (error) {
