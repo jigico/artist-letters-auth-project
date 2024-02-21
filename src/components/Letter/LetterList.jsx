@@ -1,13 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import LetterItem from "./LetterItem";
 import { LetterContainer } from "./LetterStyles";
 import EmptyItem from "./EmptyItem";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { __getLetter } from "../../redux/modules/letter";
 
 export default function LetterList() {
   const data = useSelector((state) => state.letter.data);
   const memberId = useSelector((state) => state.member.memberId);
-  const letterData = data[memberId];
+  const dispatch = useDispatch();
+  const letterData = data.filter((item) => {
+    return item.artistId == memberId;
+  });
+
+  useEffect(() => {
+    dispatch(__getLetter());
+  }, []);
 
   //데이터 여부에 따라서 분기
   //데이터 있을 경우 IetterItem, 없을 경우 빈 컴포넌트 EmptyItem

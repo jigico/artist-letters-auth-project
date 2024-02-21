@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FormContainer, LetterInput, LetterLabel, LetterTextarea } from "./LetterFormStyles";
 import LetterSelect from "./LetterSelect";
 import { v4 as uuidv4 } from "uuid";
@@ -6,13 +6,14 @@ import { ButtonBox } from "components/Button/ButtonStyles";
 import Button from "components/Button/Button";
 import userThumb from "../../assets/img/user.png";
 import { useDispatch, useSelector } from "react-redux";
-import { addLetter } from "../../redux/modules/letter";
+import { __addLetter, addLetter } from "../../redux/modules/letter";
 import { useNavigate } from "react-router-dom";
 
 export default function LetterForm() {
   const memberData = useSelector((state) => state.member.memberData);
   const dispatch = useDispatch();
-  const name = localStorage.getItem("nickname");
+  let name = localStorage.getItem("nickname");
+  let userId = localStorage.getItem("userId");
   const navigate = useNavigate();
 
   const [selected, setSelected] = useState("");
@@ -28,6 +29,7 @@ export default function LetterForm() {
     if (!name) {
       alert("로그인 후 팬레터 등록이 가능합니다. 로그인 화면으로 이동합니다.");
       navigate("/login");
+      return;
     }
     if (!selected.trim()) {
       alert("아티스트를 선택해주세요");
@@ -81,10 +83,13 @@ export default function LetterForm() {
       avatar: userThumb,
       content: contents,
       writedTo: artist,
-      id
+      artistId: selected,
+      // id,
+      userId
     };
 
-    dispatch(addLetter({ newDataObj, selected }));
+    // dispatch(addLetter({ newDataObj, selected }));
+    dispatch(__addLetter(newDataObj));
   };
 
   return (
