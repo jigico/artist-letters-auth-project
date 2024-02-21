@@ -47,6 +47,13 @@ export const UserIdText = styled.p`
 export const BtnBox = styled.div`
   margin: 1rem 0;
 `;
+export const BtnBlueBg = styled.button`
+  height: 30px;
+  border: 1px solid #0063f8;
+  background: #0063f8;
+  color: #ffffff;
+  border-radius: 5px;
+`;
 export const BtnBlackBg = styled.button`
   height: 30px;
   border: 1px solid #000000;

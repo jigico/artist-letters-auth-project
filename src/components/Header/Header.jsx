@@ -21,7 +21,6 @@ export default function Header() {
     localStorage.removeItem("avatar");
     localStorage.removeItem("nickname");
   };
-  console.log("ACCESS_TOKEN", ACCESS_TOKEN);
 
   useEffect(() => {
     if (!ACCESS_TOKEN) {

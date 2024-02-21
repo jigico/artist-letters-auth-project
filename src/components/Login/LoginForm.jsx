@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { InputName, InputStyle, LoginWrap, PageTitle, BtnBlackBg, BtnBlackText, ColorError, BtnArea } from "./LoginStyles";
+import { InputName, InputStyle, LoginWrap, PageTitle, BtnBlackBg, BtnBlackText, BtnArea } from "./LoginStyles";
 import api from "../../axios/api";
 import { useDispatch } from "react-redux";
 import { setIsLogin, setUser } from "../../redux/modules/authSlice";
@@ -52,9 +52,9 @@ export default function LoginForm() {
   //로그인
   const handleLogin = async (memberObj) => {
     try {
-      const response = await api.post("/login?expiresIn=1m", memberObj, { widthCredentials: true });
+      const response = await api.post("/login", memberObj, { widthCredentials: true });
       const accessToken = response.data.accessToken;
-      setCookie(accessToken, 1);
+      setCookie(accessToken, 60);
       dispatch(setUser(response.data));
       dispatch(setIsLogin());
       navigate("/"); //TODO 여기서 하는거 맞는지 확인 필요
