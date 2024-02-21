@@ -1,7 +1,6 @@
 import axios from "axios";
-import { BtnBlackBg, BtnBlackText, BtnBox, FileLabelStyle, InputStyle, MyPageWrap, ThumbnailBox, UserIdText } from "components/MyPage/MyPageStyles";
+import { BtnBlackBg, BtnBlackText, BtnBlueBg, BtnBox, FileLabelStyle, InputStyle, MyPageWrap, ThumbnailBox, UserIdText } from "components/MyPage/MyPageStyles";
 import React, { useEffect, useRef, useState } from "react";
-import api from "../axios/api";
 import { useNavigate } from "react-router-dom";
 
 export default function MyPage() {
@@ -11,6 +10,7 @@ export default function MyPage() {
   const id = localStorage.getItem("id");
   const [userInfo, setUserInfo] = useState(null);
   const [isEditing, setIsEditing] = useState(false); //수정 상태
+  const [isImgUpdate, setIsImgUpdate] = useState(false); //수정 상태
   const [nickname, setNickname] = useState(localNickname);
   const [avatar, setAvatar] = useState(localAvatar);
   const [isRendered, setIsRendered] = useState(false);
@@ -18,10 +18,49 @@ export default function MyPage() {
 
   const navigate = useNavigate();
 
+  //프로필 이미지 업로드
+  const updateAvatar = async (avatar) => {
+    console.log("avatar", avatar);
+    try {
+      const response = await axios.patch(
+        `${process.env.REACT_APP_SERVER_URL}/profile`,
+        { avatar },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`
+          }
+        }
+      );
+      localStorage.setItem("avatar", response.data.avatar);
+      alert(response.data.message);
+    } catch (error) {
+      alert(error.response.data.message);
+      console.error(error);
+    }
+  };
+
+  const handleImgChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatar(reader.result);
+      };
+      reader.readAsDataURL(file);
+      setIsImgUpdate(true);
+    }
+  };
+
+  const handleImgCancel = () => {
+    setAvatar(localAvatar);
+    setIsImgUpdate(false);
+  };
+
   const updateNickname = async () => {
     try {
-      const response = await axios.api(
-        `/profile`,
+      const response = await axios.patch(
+        `${process.env.REACT_APP_SERVER_URL}/profile`,
         { nickname },
         {
           headers: {
@@ -40,7 +79,6 @@ export default function MyPage() {
     } catch (error) {
       alert(error.response.data.message);
       console.error(error);
-      console.log("여기");
     }
   };
 
@@ -90,12 +128,12 @@ export default function MyPage() {
           }
         });
         setUserInfo(response.data);
+        setData();
       } catch (error) {
         alert(error.response.data.message);
         console.error(error);
       }
     };
-    setData();
     setIsRendered(true);
   }, []);
 
@@ -108,10 +146,15 @@ export default function MyPage() {
       <FileLabelStyle>
         <ThumbnailBox>
           <img src={avatar} alt={`${localNickname} 유저 프로필 이미지`} />
-          <input type="file" />
+          <input type="file" onChange={handleImgChange} />
         </ThumbnailBox>
       </FileLabelStyle>
-
+      {isImgUpdate && (
+        <BtnBox>
+          <BtnBlueBg onClick={() => updateAvatar(avatar)}>저장</BtnBlueBg>
+          <BtnBlackText onClick={handleImgCancel}>취소</BtnBlackText>
+        </BtnBox>
+      )}
       <label>
         <InputStyle type="text" id="nickname" value={nickname} ref={nicknameRef} onChange={handleChange} readOnly minLength="2" maxLength="10" />
       </label>
