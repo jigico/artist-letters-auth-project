@@ -6,7 +6,7 @@ import { ButtonBox } from "components/Button/ButtonStyles";
 import Button from "components/Button/Button";
 import userThumb from "../../assets/img/user.png";
 import { useDispatch, useSelector } from "react-redux";
-import { __addLetter, addLetter } from "../../redux/modules/letter";
+import { __addLetter, addLetter } from "../../redux/modules/letterSlice";
 import { useNavigate } from "react-router-dom";
 
 export default function LetterForm() {

@@ -1,6 +1,6 @@
 import { combineReducers, createStore } from "redux";
-import letter from "../modules/letter";
-import member from "../modules/member";
+import letter from "../modules/letterSlice";
+import member from "../modules/memberSlice";
 import auth from "../modules/authSlice";
 import { configureStore } from "@reduxjs/toolkit";
 

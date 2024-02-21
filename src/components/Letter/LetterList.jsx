@@ -3,7 +3,7 @@ import LetterItem from "./LetterItem";
 import { LetterContainer } from "./LetterStyles";
 import EmptyItem from "./EmptyItem";
 import { useDispatch, useSelector } from "react-redux";
-import { __getLetter } from "../../redux/modules/letter";
+import { __getLetter } from "../../redux/modules/letterSlice";
 
 export default function LetterList() {
   const data = useSelector((state) => state.letter.data);

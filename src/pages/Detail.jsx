@@ -2,7 +2,7 @@ import LetterContent from "components/LetterDetail/LetterContent";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { LOCAL_KEY, __getLetter } from "../redux/modules/letter";
+import { LOCAL_KEY, __getLetter } from "../redux/modules/letterSlice";
 
 export default function Detail() {
   const { isLoading, error } = useSelector((state) => state.letter);

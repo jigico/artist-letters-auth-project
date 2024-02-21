@@ -2,7 +2,7 @@ import React from "react";
 import Member from "./Member";
 import { MemberListContainer } from "./MemberStyles";
 import { useDispatch, useSelector } from "react-redux";
-import { setMemberId } from "../../redux/modules/member";
+import { setMemberId } from "../../redux/modules/memberSlice";
 
 export default function MemberList() {
   const { memberData, memberId } = useSelector((state) => state.member);
