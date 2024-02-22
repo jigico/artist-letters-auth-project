@@ -6,8 +6,8 @@ import { logout } from "../../redux/modules/authSlice";
 import { getCookie } from "util/cookie";
 
 export default function Header() {
-  const COOKIE_KEY = "accessToken";
-  const ACCESS_TOKEN = getCookie(COOKIE_KEY);
+  // const COOKIE_KEY = "accessToken";
+  // const ACCESS_TOKEN = getCookie(COOKIE_KEY);
   const dispatch = useDispatch();
   const userId = localStorage.getItem("userId");
   const { isLogin } = useSelector((state) => state.auth);
@@ -17,11 +17,11 @@ export default function Header() {
     dispatch(logout());
   };
 
-  useEffect(() => {
-    if (!ACCESS_TOKEN && isLogin) {
-      dispatch(logout());
-    }
-  }, [ACCESS_TOKEN]);
+  // useEffect(() => {
+  //   if (!ACCESS_TOKEN && isLogin) {
+  //     dispatch(logout());
+  //   }
+  // }, [ACCESS_TOKEN]);
 
   return (
     <HeaderContainer>
@@ -29,7 +29,7 @@ export default function Header() {
         <Link to="./">ARTIST</Link>
       </h1>
       <div>
-        {!userId && !ACCESS_TOKEN ? (
+        {!isLogin ? (
           <Link to="/login">로그인</Link>
         ) : (
           <>
