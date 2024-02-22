@@ -1,17 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getCookie } from "util/cookie";
 
-const COOKIE_KEY = "accessToken";
-const ACCESS_TOKEN = getCookie(COOKIE_KEY);
+// const COOKIE_KEY = "accessToken";
+// const ACCESS_TOKEN = getCookie(COOKIE_KEY);
 
 const initialState = {
-  isLogin: false,
-  user: {
-    userId: "",
-    avatar: "",
-    nickname: "",
-    accessToken: ""
-  }
+  isLogin: !!localStorage.getItem("accessToken"),
+  avatar: localStorage.getItem("avatar"),
+  nickname: localStorage.getItem("nickname"),
+  userId: localStorage.getItem("userId")
 };
 
 const authSlice = createSlice({
@@ -29,7 +26,7 @@ const authSlice = createSlice({
     },
     logout: (state) => {
       state.isLogin = false;
-      if (ACCESS_TOKEN) document.cookie = COOKIE_KEY + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      // if (ACCESS_TOKEN) document.cookie = COOKIE_KEY + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       localStorage.removeItem("accessToken");
       localStorage.removeItem("userId");
       localStorage.removeItem("avatar");
@@ -42,13 +39,6 @@ const authSlice = createSlice({
       localStorage.setItem("userId", userId);
       localStorage.setItem("avatar", avatar);
       localStorage.setItem("nickname", nickname);
-      //state 저장
-      state.user = {
-        userId,
-        avatar,
-        nickname,
-        accessToken
-      };
     }
   }
 });
