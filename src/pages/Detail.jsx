@@ -2,11 +2,10 @@ import LetterContent from "components/LetterDetail/LetterContent";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { LOCAL_KEY, __getLetter } from "../redux/modules/letterSlice";
+import { __getLetter } from "../redux/modules/letterSlice";
 
 export default function Detail() {
-  const { isLoading, error } = useSelector((state) => state.letter);
-  const data = JSON.parse(localStorage.getItem(LOCAL_KEY));
+  const { data, isLoading, error } = useSelector((state) => state.letter);
   const params = useParams();
   const dispatch = useDispatch();
   let findData = {};
@@ -18,7 +17,7 @@ export default function Detail() {
 
   useEffect(() => {
     dispatch(__getLetter());
-  }, []);
+  }, [dispatch]);
 
   if (isLoading) {
     return <div>로딩중</div>;

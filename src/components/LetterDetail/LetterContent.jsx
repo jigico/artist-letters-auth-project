@@ -13,9 +13,10 @@ export default function LetterContent({ data }) {
 
   const userId = localStorage.getItem("userId");
   const nickname = localStorage.getItem("nickname");
+  const avatar = localStorage.getItem("avatar");
 
   //전역으로 관리하지 않아도 되는 데이터 모음
-  const [content, setContent] = useState(data.content);
+  const [content, setContent] = useState(data && data.content);
   const contentRef = useRef(null);
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
@@ -86,13 +87,13 @@ export default function LetterContent({ data }) {
         </UserThumb>
         <div>
           <UserName>{data.nickname}</UserName>
-          <LetterDate>{getFormattedDate(data.createdAt)}</LetterDate>
+          <LetterDate>{getFormattedDate(data && data.createdAt)}</LetterDate>
         </div>
       </LetterTopArea>
       <ArtistInfo>To {data.writedTo}</ArtistInfo>
       <LetterTextarea cols="30" rows="5" value={content} onChange={changeHandler} maxLength="80" ref={contentRef} readOnly placeholder="최대 80자까지 입력할 수 있습니다."></LetterTextarea>
       <ButtonBox>
-        {userId && userId === data.userId ? (
+        {data && userId === data.userId ? (
           isEditing === true ? (
             <>
               <Button clickHandler={editLetter} variant="success">
