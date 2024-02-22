@@ -10,7 +10,7 @@ const initialState = {
   // data: initial !== null ? initial : {},
   data: [],
   // localKey: LOCAL_KEY,
-  isLoading: false,
+  isLoading: true,
   isError: false,
   error: null
 };
@@ -53,8 +53,9 @@ export const __updateLetter = createAsyncThunk("updateLetter", async (payload, t
 
 export const __deleteLetter = createAsyncThunk("deleteLetter", async (payload, thunkAPI) => {
   try {
-    const response = await jsonApi.delete(`/letters/${payload}`);
-    return thunkAPI.fulfillWithValue(response.data);
+    await jsonApi.delete(`/letters/${payload}`);
+    const data = await getLettersFromDB();
+    return thunkAPI.fulfillWithValue(data);
   } catch (error) {
     alert(error.response.data.message);
     return thunkAPI.rejectWithValue(error);
@@ -144,7 +145,6 @@ const letterSlice = createSlice({
       state.isLoading = false;
       state.isError = false;
       state.data = [...state.data, { ...newData }];
-      localStorage.setItem(LOCAL_KEY, JSON.stringify(state.data));
     });
     builder.addCase(__updateLetter.rejected, (state, action) => {
       state.isLoading = false;
@@ -160,8 +160,7 @@ const letterSlice = createSlice({
     builder.addCase(__deleteLetter.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isError = false;
-      state.data = [...state.data];
-      localStorage.setItem(LOCAL_KEY, JSON.stringify(state.data));
+      state.data = action.payload;
     });
     builder.addCase(__deleteLetter.rejected, (state, action) => {
       state.isLoading = false;

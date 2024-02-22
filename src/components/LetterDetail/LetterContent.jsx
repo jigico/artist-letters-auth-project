@@ -83,14 +83,14 @@ export default function LetterContent({ data }) {
     <LetterContentItem>
       <LetterTopArea>
         <UserThumb>
-          <img src={data?.avatar} alt={`${data?.nickname} 썸네일`} />
+          <img src={data.avatar} alt={`${data.nickname} 썸네일`} />
         </UserThumb>
         <div>
-          <UserName>{data?.nickname}</UserName>
+          <UserName>{data.nickname}</UserName>
           <LetterDate>{getFormattedDate(data && data.createdAt)}</LetterDate>
         </div>
       </LetterTopArea>
-      <ArtistInfo>To {data?.writedTo}</ArtistInfo>
+      <ArtistInfo>To {data.writedTo}</ArtistInfo>
       <LetterTextarea cols="30" rows="5" value={content} onChange={changeHandler} maxLength="80" ref={contentRef} readOnly placeholder="최대 80자까지 입력할 수 있습니다."></LetterTextarea>
       <ButtonBox>
         {data && userId === data.userId ? (
