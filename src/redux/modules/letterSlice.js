@@ -14,10 +14,16 @@ const initialState = {
   error: null
 };
 
+const getLettersFromDB = async () => {
+  const { data } = await axios.get(`${process.env.REACT_APP_JSON_SERVER_URL}/letters`);
+  return data;
+};
+
 export const __addLetter = createAsyncThunk("addLetter", async (payload, thunkAPI) => {
   try {
-    const response = await axios.post(`${process.env.REACT_APP_JSON_SERVER_URL}/letters`, payload);
-    return thunkAPI.fulfillWithValue(response.data);
+    await axios.post(`${process.env.REACT_APP_JSON_SERVER_URL}/letters`, payload);
+    const data = await getLettersFromDB();
+    return thunkAPI.fulfillWithValue(data);
   } catch (error) {
     console.error(error);
     return thunkAPI.rejectWithValue(error);
@@ -26,8 +32,8 @@ export const __addLetter = createAsyncThunk("addLetter", async (payload, thunkAP
 
 export const __getLetter = createAsyncThunk("getLetter", async (payload, thunkAPI) => {
   try {
-    const response = await axios.get(`${process.env.REACT_APP_JSON_SERVER_URL}/letters`);
-    return thunkAPI.fulfillWithValue(response.data);
+    const data = await getLettersFromDB();
+    return thunkAPI.fulfillWithValue(data);
   } catch (error) {
     console.error(error);
     return thunkAPI.rejectWithValue(error);
@@ -36,7 +42,7 @@ export const __getLetter = createAsyncThunk("getLetter", async (payload, thunkAP
 
 export const __updateLetter = createAsyncThunk("updateLetter", async (payload, thunkAPI) => {
   try {
-    const response = await axios.patch(`${process.env.REACT_APP_JSON_SERVER_URL}/letters/${payload.id}`, { content: payload.content });
+    const response = await axios.patch(`${process.env.REACT_APP_JSON_SERVER_URL}/letters/${payload.id}`, { content: payload.content, nickname: payload.nickname });
     return thunkAPI.fulfillWithValue(response.data);
   } catch (error) {
     alert(error.response.data.message);
@@ -98,8 +104,7 @@ const letterSlice = createSlice({
     builder.addCase(__addLetter.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isError = false;
-      state.data = [...state.data, action.payload];
-      localStorage.setItem(LOCAL_KEY, JSON.stringify(state.data));
+      state.data = action.payload;
     });
     builder.addCase(__addLetter.rejected, (state, action) => {
       state.isLoading = false;
@@ -116,7 +121,6 @@ const letterSlice = createSlice({
       state.isLoading = false;
       state.isError = false;
       state.data = action.payload;
-      localStorage.setItem(LOCAL_KEY, JSON.stringify(state.data));
     });
     builder.addCase(__getLetter.rejected, (state, action) => {
       state.isLoading = false;
@@ -130,11 +134,12 @@ const letterSlice = createSlice({
       state.isError = false;
     });
     builder.addCase(__updateLetter.fulfilled, (state, action) => {
-      const { id, content } = action.payload;
+      const { id, content, nickname } = action.payload;
       const newData = state.data.find((item) => {
         return item.id === id;
       });
       newData.content = content;
+      newData.nickname = nickname;
       state.isLoading = false;
       state.isError = false;
       state.data = [...state.data, { ...newData }];

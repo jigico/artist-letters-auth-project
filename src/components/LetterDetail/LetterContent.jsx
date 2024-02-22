@@ -12,6 +12,7 @@ export default function LetterContent({ data }) {
   const dispatch = useDispatch();
 
   const userId = localStorage.getItem("userId");
+  const nickname = localStorage.getItem("nickname");
 
   //전역으로 관리하지 않아도 되는 데이터 모음
   const [content, setContent] = useState(data.content);
@@ -52,7 +53,7 @@ export default function LetterContent({ data }) {
       return;
     }
 
-    dispatch(__updateLetter({ id: data.id, content }));
+    dispatch(__updateLetter({ id: data.id, content, nickname }));
     setContent(content);
     alert("수정이 완료되었습니다.");
 
