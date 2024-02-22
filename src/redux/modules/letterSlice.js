@@ -43,8 +43,9 @@ export const __getLetter = createAsyncThunk("getLetter", async (payload, thunkAP
 
 export const __updateLetter = createAsyncThunk("updateLetter", async (payload, thunkAPI) => {
   try {
-    const response = await jsonApi.patch(`/letters/${payload.id}`, { content: payload.content, nickname: payload.nickname });
-    return thunkAPI.fulfillWithValue(response.data);
+    await jsonApi.patch(`/letters/${payload.id}`, { content: payload.content, nickname: payload.nickname });
+    const data = await getLettersFromDB();
+    return thunkAPI.fulfillWithValue(data);
   } catch (error) {
     alert(error.response.data.message);
     return thunkAPI.rejectWithValue(error);
@@ -136,15 +137,16 @@ const letterSlice = createSlice({
       state.isError = false;
     });
     builder.addCase(__updateLetter.fulfilled, (state, action) => {
-      const { id, content, nickname } = action.payload;
-      const newData = state.data.find((item) => {
-        return item.id === id;
-      });
-      newData.content = content;
-      newData.nickname = nickname;
+      // const { id, content, nickname } = action.payload;
+      // const newData = state.data.find((item) => {
+      //   return item.id === id;
+      // });
+      // newData.content = content;
+      // newData.nickname = nickname;
       state.isLoading = false;
       state.isError = false;
-      state.data = [...state.data, { ...newData }];
+      // state.data = [...state.data, { ...newData }];
+      state.data = action.payload;
     });
     builder.addCase(__updateLetter.rejected, (state, action) => {
       state.isLoading = false;
