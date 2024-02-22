@@ -1,20 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
-import { FormContainer, LetterInput, LetterLabel, LetterTextarea } from "./LetterFormStyles";
+import React, { useRef, useState } from "react";
+import { FormContainer, LetterLabel, LetterTextarea } from "./LetterFormStyles";
 import LetterSelect from "./LetterSelect";
-import { v4 as uuidv4 } from "uuid";
 import { ButtonBox } from "components/Button/ButtonStyles";
 import Button from "components/Button/Button";
 import userThumb from "../../assets/img/user.png";
 import { useDispatch, useSelector } from "react-redux";
-import { __addLetter, addLetter } from "../../redux/modules/letterSlice";
+import { __addLetter } from "../../redux/modules/letterSlice";
 import { useNavigate } from "react-router-dom";
 
 export default function LetterForm() {
   const memberData = useSelector((state) => state.member.memberData);
-  const isLogin = useSelector((state) => state.auth.isLogin);
+  const { isLogin, userId, nickname, avatar } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  let name = localStorage.getItem("nickname");
-  let userId = localStorage.getItem("userId");
   const navigate = useNavigate();
 
   const [selected, setSelected] = useState("");
@@ -27,7 +24,7 @@ export default function LetterForm() {
     const contents = e.target.contents.value;
 
     //유효성 검사
-    if (!name) {
+    if (!isLogin) {
       alert("로그인 후 팬레터 등록이 가능합니다. 로그인 화면으로 이동합니다.");
       navigate("/login");
       return;
@@ -44,7 +41,7 @@ export default function LetterForm() {
     }
 
     //등록 기능
-    saveLetter(name, contents);
+    saveLetter(contents);
 
     alert("등록이 완료되었습니다.");
     e.target.reset();
@@ -73,15 +70,14 @@ export default function LetterForm() {
   };
 
   //등록 기능
-  const saveLetter = (name, contents) => {
-    const id = uuidv4();
+  const saveLetter = (contents) => {
     const date = new Date();
     const artist = findMember();
 
     const newDataObj = {
       createdAt: date,
-      nickname: name,
-      avatar: userThumb,
+      nickname,
+      avatar,
       content: contents,
       writedTo: artist,
       artistId: selected,
@@ -95,7 +91,7 @@ export default function LetterForm() {
 
   return (
     <FormContainer onSubmit={formHandler}>
-      닉네임 : {isLogin && name ? name : "로그인 후 이용 가능합니다."}
+      닉네임 : {isLogin && nickname ? nickname : "로그인 후 이용 가능합니다."}
       <LetterSelect id="artistSelect" onChangeHandler={(e) => onChangeHandler(e)} memberData={memberData} selectRef={selectRef}></LetterSelect>
       <LetterLabel htmlFor="contents">내용</LetterLabel>
       <LetterTextarea name="contents" id="contents" cols="30" rows="10" maxLength="80" ref={contentsRef} placeholder="최대 80자까지 입력할 수 있습니다."></LetterTextarea>
