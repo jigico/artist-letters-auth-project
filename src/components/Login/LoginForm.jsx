@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { InputName, InputStyle, LoginWrap, PageTitle, BtnBlackBg, BtnBlackText, BtnArea } from "./LoginStyles";
 import api from "../../axios/api";
 import { useDispatch } from "react-redux";
-import { login } from "../../redux/modules/authSlice";
+import { __login } from "../../redux/modules/authSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -44,21 +44,6 @@ export default function LoginForm() {
       // alert("회원가입이 완료되었습니다!");
       setIsJoin(false);
       toast.success("회원가입이 완료되었습니다!");
-    } catch (error) {
-      // alert("에러가 발생했습니다.");
-      console.error(error);
-    }
-  };
-
-  //로그인
-  const handleLogin = async (memberObj) => {
-    try {
-      const response = await api.post("/login", memberObj, { widthCredentials: true });
-      const accessToken = response.data.accessToken;
-      setCookie(accessToken, 60);
-      dispatch(login(response.data));
-      toast.success("로그인 성공");
-      navigate("/"); //TODO 여기서 하는거 맞는지 확인 필요
     } catch (error) {
       // alert("에러가 발생했습니다.");
       console.error(error);
@@ -113,8 +98,8 @@ export default function LoginForm() {
         id,
         password
       };
-
-      handleLogin(memberObj);
+      dispatch(__login(memberObj));
+      navigate("/");
     }
   };
 
