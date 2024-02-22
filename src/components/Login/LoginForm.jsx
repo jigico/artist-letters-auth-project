@@ -2,8 +2,9 @@ import React, { useRef, useState } from "react";
 import { InputName, InputStyle, LoginWrap, PageTitle, BtnBlackBg, BtnBlackText, BtnArea } from "./LoginStyles";
 import api from "../../axios/api";
 import { useDispatch } from "react-redux";
-import { setIsLogin, setUser } from "../../redux/modules/authSlice";
+import { login } from "../../redux/modules/authSlice";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function LoginForm() {
   const [isJoin, setIsJoin] = useState(false);
@@ -40,9 +41,9 @@ export default function LoginForm() {
   const handleRegister = async (newObj) => {
     try {
       await api.post("/register", newObj);
-      alert("회원가입이 완료되었습니다!");
-      //TODO: 회원가입 화면으로 바꿀 때 input에 값을 유지하는게 좋을지 확인 필요.(현재는 유지)
+      // alert("회원가입이 완료되었습니다!");
       setIsJoin(false);
+      toast.success("회원가입이 완료되었습니다!");
     } catch (error) {
       // alert("에러가 발생했습니다.");
       console.error(error);
@@ -55,8 +56,8 @@ export default function LoginForm() {
       const response = await api.post("/login", memberObj, { widthCredentials: true });
       const accessToken = response.data.accessToken;
       setCookie(accessToken, 60);
-      dispatch(setUser(response.data));
-      dispatch(setIsLogin());
+      dispatch(login(response.data));
+      toast.success("로그인 성공");
       navigate("/"); //TODO 여기서 하는거 맞는지 확인 필요
     } catch (error) {
       // alert("에러가 발생했습니다.");

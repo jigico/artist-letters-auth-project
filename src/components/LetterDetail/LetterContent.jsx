@@ -4,7 +4,7 @@ import { LetterTextarea } from "components/LetterForm/LetterFormStyles";
 import { useNavigate } from "react-router-dom";
 import Button from "components/Button/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { __updateLetter, __deleteLetter } from "../../redux/modules/letter";
+import { __updateLetter, __deleteLetter } from "../../redux/modules/letterSlice";
 import { getFormattedDate } from "util/date";
 
 export default function LetterContent({ data }) {

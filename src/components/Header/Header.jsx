@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { BtnLogout, HeaderContainer } from "./HeaderStyles";
 import { useDispatch, useSelector } from "react-redux";
-import { setIsLogin } from "../../redux/modules/authSlice";
+import { logout } from "../../redux/modules/authSlice";
 import { getCookie } from "util/cookie";
 
 export default function Header() {
@@ -14,24 +14,12 @@ export default function Header() {
 
   //로그아웃
   const handleLogout = () => {
-    document.cookie = COOKIE_KEY + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    dispatch(setIsLogin());
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("avatar");
-    localStorage.removeItem("nickname");
+    dispatch(logout());
   };
 
   useEffect(() => {
-    if (!ACCESS_TOKEN) {
-      if (isLogin) {
-        dispatch(setIsLogin());
-      }
-
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("userId");
-      localStorage.removeItem("avatar");
-      localStorage.removeItem("nickname");
+    if (!ACCESS_TOKEN && isLogin) {
+      dispatch(logout());
     }
   }, [ACCESS_TOKEN]);
 
