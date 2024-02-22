@@ -66,38 +66,6 @@ export const __deleteLetter = createAsyncThunk("deleteLetter", async (payload, t
 const letterSlice = createSlice({
   name: "letter",
   initialState,
-  reducers: {
-    updateLetter: (state, action) => {
-      const { updateMemberId, updateIdx, content } = action.payload;
-      state.data[updateMemberId][updateIdx].content = content;
-      localStorage.setItem(LOCAL_KEY, JSON.stringify(state.data));
-      // return {
-      //   ...state,
-      //   data: state.data
-      // };
-    },
-    deleteLetter: (state, action) => {
-      const { memberId, deleteIdx } = action.payload;
-      state.data[memberId].splice(deleteIdx, 1);
-      localStorage.setItem(LOCAL_KEY, JSON.stringify(state.data));
-      // return {
-      //   ...state,
-      //   data: state.data
-      // };
-    },
-    addLetter: (state, action) => {
-      const { newDataObj, selected } = action.payload;
-      const newDataArr = state.data;
-      const pushDataArr = state.data[selected] ? state.data[selected] : [];
-      pushDataArr.push(newDataObj);
-      newDataArr[selected] = pushDataArr;
-      localStorage.setItem(LOCAL_KEY, JSON.stringify(newDataArr));
-      // return {
-      //   ...state,
-      //   data: { ...newDataArr }
-      // };
-    }
-  },
   extraReducers: (builder) => {
     //추가
     builder.addCase(__addLetter.pending, (state, action) => {
@@ -137,15 +105,8 @@ const letterSlice = createSlice({
       state.isError = false;
     });
     builder.addCase(__updateLetter.fulfilled, (state, action) => {
-      // const { id, content, nickname } = action.payload;
-      // const newData = state.data.find((item) => {
-      //   return item.id === id;
-      // });
-      // newData.content = content;
-      // newData.nickname = nickname;
       state.isLoading = false;
       state.isError = false;
-      // state.data = [...state.data, { ...newData }];
       state.data = action.payload;
     });
     builder.addCase(__updateLetter.rejected, (state, action) => {
@@ -172,5 +133,4 @@ const letterSlice = createSlice({
   }
 });
 
-export const { updateLetter, deleteLetter, addLetter } = letterSlice.actions;
 export default letterSlice.reducer;
