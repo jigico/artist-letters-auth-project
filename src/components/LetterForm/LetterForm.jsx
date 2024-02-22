@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function LetterForm() {
   const memberData = useSelector((state) => state.member.memberData);
+  const isLogin = useSelector((state) => state.auth.isLogin);
   const dispatch = useDispatch();
   let name = localStorage.getItem("nickname");
   let userId = localStorage.getItem("userId");
@@ -94,7 +95,7 @@ export default function LetterForm() {
 
   return (
     <FormContainer onSubmit={formHandler}>
-      닉네임 : {name ? name : "로그인 후 이용 가능합니다."}
+      닉네임 : {isLogin && name ? name : "로그인 후 이용 가능합니다."}
       <LetterSelect id="artistSelect" onChangeHandler={(e) => onChangeHandler(e)} memberData={memberData} selectRef={selectRef}></LetterSelect>
       <LetterLabel htmlFor="contents">내용</LetterLabel>
       <LetterTextarea name="contents" id="contents" cols="30" rows="10" maxLength="80" ref={contentsRef} placeholder="최대 80자까지 입력할 수 있습니다."></LetterTextarea>
