@@ -1,7 +1,10 @@
 import axios from "axios";
 import { BtnBlackBg, BtnBlackText, BtnBlueBg, BtnBox, FileLabelStyle, InputStyle, MyPageWrap, ThumbnailBox, UserIdText } from "components/MyPage/MyPageStyles";
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useAsyncError, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { __editProfile } from "../redux/modules/authSlice";
 
 export default function MyPage() {
   const accessToken = localStorage.getItem("accessToken");
@@ -13,42 +16,41 @@ export default function MyPage() {
   const [isImgUpdate, setIsImgUpdate] = useState(false); //수정 상태
   const [nickname, setNickname] = useState(localNickname);
   const [avatar, setAvatar] = useState(localAvatar);
+  const [file, setFile] = useState(null);
   const [isRendered, setIsRendered] = useState(false);
   const nicknameRef = useRef(null);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   //프로필 이미지 업로드
   const updateAvatar = async (avatar) => {
-    try {
-      const response = await axios.patch(
-        `${process.env.REACT_APP_SERVER_URL}/profile`,
-        { avatar },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`
-          }
-        }
-      );
-      localStorage.setItem("avatar", response.data.avatar);
-      alert(response.data.message);
-    } catch (error) {
-      alert(error.response.data.message);
-      console.error(error);
+    const formData = new FormData();
+    if (avatar !== localAvatar) {
+      formData.append("avatar", file);
     }
+    dispatch(__editProfile(formData));
   };
 
   const handleImgChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setAvatar(reader.result);
-      };
-      reader.readAsDataURL(file);
-      setIsImgUpdate(true);
+    if (file.size > 1024 * 1024) {
+      return toast.warn("최대 1MB까지 업로드 가능합니다.");
     }
+    setFile(file);
+    // if (file) {
+    //   const reader = new FileReader();
+    //   reader.onloadend = () => {
+    //     setAvatar(reader.result);
+    //   };
+    //   reader.readAsDataURL(file);
+    //   setIsImgUpdate(true);
+    // }
+
+    //file -> blob url 형식으로 변환
+    const imgUrl = URL.createObjectURL(file);
+    setAvatar(imgUrl);
+    setIsImgUpdate(true);
   };
 
   const handleImgCancel = () => {
@@ -57,28 +59,15 @@ export default function MyPage() {
   };
 
   const updateNickname = async () => {
-    try {
-      const response = await axios.patch(
-        `${process.env.REACT_APP_SERVER_URL}/profile`,
-        { nickname },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`
-          }
-        }
-      );
-      setNickname(response.data.nickname);
-      localStorage.setItem("nickname", response.data.nickname);
-      alert(response.data.message);
-
-      //수정상태 비활성화
-      nicknameRef.current.readOnly = true;
-      setIsEditing(false);
-    } catch (error) {
-      alert(error.response.data.message);
-      console.error(error);
+    const formData = new FormData();
+    if (nickname !== localNickname) {
+      formData.append("nickname", nickname);
     }
+    dispatch(__editProfile(formData));
+
+    //수정상태 비활성화
+    nicknameRef.current.readOnly = true;
+    setIsEditing(false);
   };
 
   //유저 정보(닉네임) 수정 - 활성화 기능
@@ -145,7 +134,7 @@ export default function MyPage() {
       <FileLabelStyle>
         <ThumbnailBox>
           <img src={avatar} alt={`${localNickname} 유저 프로필 이미지`} />
-          <input type="file" onChange={handleImgChange} />
+          <input type="file" onChange={handleImgChange} accept="image/*" />
         </ThumbnailBox>
       </FileLabelStyle>
       {isImgUpdate && (

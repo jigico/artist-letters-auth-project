@@ -70,11 +70,11 @@ export default function LetterForm() {
 
   //등록 기능
   const saveLetter = (contents) => {
-    const date = new Date();
+    // const date = new Date();
     const artist = findMember();
 
     const newDataObj = {
-      createdAt: date,
+      createdAt: Date.now(),
       nickname,
       avatar,
       content: contents,
