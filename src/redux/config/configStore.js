@@ -14,4 +14,5 @@ const store = configureStore({
   reducer: { letter, member, auth }
 });
 
-export default store;
+const getStore = () => store;
+export default getStore;

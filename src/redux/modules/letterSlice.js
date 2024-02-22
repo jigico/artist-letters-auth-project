@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { jsonApi } from "../../axios/jsonApi";
 import axios from "axios";
 
 export const LOCAL_KEY = "letter"; //localStorage key
@@ -15,13 +16,13 @@ const initialState = {
 };
 
 const getLettersFromDB = async () => {
-  const { data } = await axios.get(`${process.env.REACT_APP_JSON_SERVER_URL}/letters`);
+  const { data } = await jsonApi.get(`/letters`);
   return data;
 };
 
 export const __addLetter = createAsyncThunk("addLetter", async (payload, thunkAPI) => {
   try {
-    await axios.post(`${process.env.REACT_APP_JSON_SERVER_URL}/letters`, payload);
+    await jsonApi.post(`/letters`, payload);
     const data = await getLettersFromDB();
     return thunkAPI.fulfillWithValue(data);
   } catch (error) {
@@ -32,7 +33,7 @@ export const __addLetter = createAsyncThunk("addLetter", async (payload, thunkAP
 
 export const __getLetter = createAsyncThunk("getLetter", async (payload, thunkAPI) => {
   try {
-    const data = await getLettersFromDB();
+    const { data } = await axios.get(`${process.env.REACT_APP_JSON_SERVER_URL}/letters`);
     return thunkAPI.fulfillWithValue(data);
   } catch (error) {
     console.error(error);
@@ -42,7 +43,7 @@ export const __getLetter = createAsyncThunk("getLetter", async (payload, thunkAP
 
 export const __updateLetter = createAsyncThunk("updateLetter", async (payload, thunkAPI) => {
   try {
-    const response = await axios.patch(`${process.env.REACT_APP_JSON_SERVER_URL}/letters/${payload.id}`, { content: payload.content, nickname: payload.nickname });
+    const response = await jsonApi.patch(`/letters/${payload.id}`, { content: payload.content, nickname: payload.nickname });
     return thunkAPI.fulfillWithValue(response.data);
   } catch (error) {
     alert(error.response.data.message);
@@ -52,7 +53,7 @@ export const __updateLetter = createAsyncThunk("updateLetter", async (payload, t
 
 export const __deleteLetter = createAsyncThunk("deleteLetter", async (payload, thunkAPI) => {
   try {
-    const response = await axios.delete(`${process.env.REACT_APP_JSON_SERVER_URL}/letters/${payload}`);
+    const response = await jsonApi.delete(`/letters/${payload}`);
     return thunkAPI.fulfillWithValue(response.data);
   } catch (error) {
     alert(error.response.data.message);

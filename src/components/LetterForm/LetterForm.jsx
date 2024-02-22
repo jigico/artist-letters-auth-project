@@ -43,7 +43,6 @@ export default function LetterForm() {
     //등록 기능
     saveLetter(contents);
 
-    alert("등록이 완료되었습니다.");
     e.target.reset();
     setSelected("");
   };
