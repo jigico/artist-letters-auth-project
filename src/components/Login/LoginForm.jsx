@@ -4,6 +4,7 @@ import api from "../../axios/api";
 import { useDispatch } from "react-redux";
 import { setIsLogin, setUser } from "../../redux/modules/authSlice";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function LoginForm() {
   const [isJoin, setIsJoin] = useState(false);
@@ -40,8 +41,9 @@ export default function LoginForm() {
   const handleRegister = async (newObj) => {
     try {
       await api.post("/register", newObj);
-      alert("회원가입이 완료되었습니다!");
+      // alert("회원가입이 완료되었습니다!");
       setIsJoin(false);
+      toast.success("회원가입이 완료되었습니다!");
     } catch (error) {
       // alert("에러가 발생했습니다.");
       console.error(error);
@@ -56,6 +58,7 @@ export default function LoginForm() {
       setCookie(accessToken, 60);
       dispatch(setUser(response.data));
       dispatch(setIsLogin());
+      toast.success("로그인 성공");
       navigate("/"); //TODO 여기서 하는거 맞는지 확인 필요
     } catch (error) {
       // alert("에러가 발생했습니다.");
@@ -106,7 +109,6 @@ export default function LoginForm() {
       };
 
       handleRegister(newObj);
-      e.target.reset();
     } else {
       const memberObj = {
         id,
