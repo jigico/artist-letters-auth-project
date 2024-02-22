@@ -1,5 +1,4 @@
 import Header from "components/Header/Header";
-import TopBanner from "components/TopBanner/TopBanner";
 import React from "react";
 import { Outlet } from "react-router-dom";
 import { Layout1280 } from "./LayoutStyles";
